@@ -12,7 +12,17 @@
         <div class="course"> Course : <%= assignmentdata.course %> </div>
      <div class="assignment">Assignment :<%= assignmentdata.assignment %></div>
      <div class="duedate">DueDate : <%= (assignmentdata.duedate).toLocaleDateString(undefined, options)%></div>
-    </div>
+     
     
+    <a href="/uploads/<%= path.basename(assignmentdata.pdf) %>" target="_blank"><button class="viewbutton">View Dcoument</button>
+    </a>
 </div>
+    <!-- The embed element with the PDF -->
+     
+
+    
+ 
+
+<!-- <embed src="/uploads/pdf-1690198732506-24212502.pdf" width="800" height="600" type="application/pdf"> -->
+     
 

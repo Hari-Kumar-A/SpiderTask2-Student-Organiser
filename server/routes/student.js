@@ -4,19 +4,42 @@ const authMiddleware = require('../middleware/middleware');
 const studentController=require('../controllers/studentController')
 const assignmentsController=require('../controllers/assignmentsController')
 const eventsController=require('../controllers/eventsController')
-const googlecalendarController=require('../controllers/googlecalendarController')
+const expensesController=require('../controllers/expensesController')
+const categorylimitsController=require('../controllers/categorylimitsController')
+const coursesController=require('../controllers/coursesController')
+const dashboardController=require('../controllers/dashboardController')
+const multer = require('multer');
+const path = require('path');
  
-router.get('/',authMiddleware.isAuthenticated, studentController.homepage)
+const addPathModule = require('../middleware/pathware');
+ 
+// router.get('/',authMiddleware.isAuthenticated, studentController.homepage)
+
+//DashboardPage
+router.get('/',authMiddleware.isAuthenticated,dashboardController.homepage)
+
+// Set up file upload storage
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.join(__dirname, '../../uploads')); // This folder will store the uploaded files
+    },
+    filename: function (req, file, cb) {// Generate a unique name for the uploaded file
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+  });
+
+const upload = multer({ storage: storage });
 
 //adding new assignment
-router.get('/assignments/assignment',authMiddleware.isAuthenticated, studentController.addAssignment)
-router.post('/assignments/assignment',authMiddleware.isAuthenticated, studentController.postAssignment)
+router.get('/assignments/assignment',authMiddleware.isAuthenticated,upload.single('pdf'), studentController.addAssignment)
+router.post('/assignments/assignment',authMiddleware.isAuthenticated,upload.single('pdf'), studentController.postAssignment)
 
 //showing all assignments
 router.get('/assignments',authMiddleware.isAuthenticated, assignmentsController.assignmentspage)
 
 //view assignment
-router.get('/assignments/view/:id',authMiddleware.isAuthenticated, assignmentsController.viewpage)
+router.get('/assignments/view/:id',authMiddleware.isAuthenticated,addPathModule, assignmentsController.viewpage)
 
 //edit assignments
 router.get('/assignments/edit/:id',authMiddleware.isAuthenticated, assignmentsController.editpage)
@@ -32,6 +55,7 @@ router.post('/assignments/search',authMiddleware.isAuthenticated, assignmentsCon
 //calendar view of assignments
 router.get('/assignments/calendarassignment',authMiddleware.isAuthenticated, assignmentsController.calendarpage)
 
+
 //showing all events and classes
 router.get('/events',authMiddleware.isAuthenticated, eventsController.eventspage)
 
@@ -39,8 +63,7 @@ router.get('/events',authMiddleware.isAuthenticated, eventsController.eventspage
 router.get('/events/addevent',authMiddleware.isAuthenticated, eventsController.addEvent)
 router.post('/events/addevent',authMiddleware.isAuthenticated, eventsController.postEvent)
 
-//adding event to googlecalendar*****
-// router.post('/events/addevent',authMiddleware.isAuthenticated, googlecalendarController.showEvent)
+ 
 
 ////view event
 router.get('/events/view/:id',authMiddleware.isAuthenticated, eventsController.viewpage)
@@ -61,5 +84,75 @@ router.post('/events/search',authMiddleware.isAuthenticated, eventsController.se
 
 //showing common calendar (Events+Assignments)
 router.get('/commoncalendar',authMiddleware.isAuthenticated, eventsController.commoncalendarpage)
+
+
+
+//expenses-------------------------------------------------------------------------------------------
+
+//showing all expenses  
+router.get('/expenses',authMiddleware.isAuthenticated, expensesController.expensespage)
+
+//adding expense
+router.get('/expenses/addexpense',authMiddleware.isAuthenticated, expensesController.addExpense)
+router.post('/expenses/addexpense',authMiddleware.isAuthenticated, expensesController.postExpense)
+
+////view expense
+router.get('/expenses/view/:id',authMiddleware.isAuthenticated, expensesController.viewpage)
+
+//edit expense
+router.get('/expenses/edit/:id',authMiddleware.isAuthenticated, expensesController.editpage)
+router.put('/expenses/edit/:id',authMiddleware.isAuthenticated, expensesController.posteditpage)
+
+//Delete expense
+router.get('/expenses/delete/:id',authMiddleware.isAuthenticated, expensesController.deletepage)
+router.delete('/expenses/delete/:id',authMiddleware.isAuthenticated, expensesController.postdeletepage)
+
+//calendar view of expenses
+router.get('/expenses/calendarexpense',authMiddleware.isAuthenticated, expensesController.calendarpage)
+
+//search expenses by category
+router.post('/expenses/search',authMiddleware.isAuthenticated, expensesController.searchpage)
+
+//expenses/categorylimits-------------------------------------------------------------------------------------------
+
+//showing all expenses/categorylimits  
+router.get('/expenses/categorylimits',authMiddleware.isAuthenticated, categorylimitsController.categorylimitspage)
+
+//adding category & limit
+router.get('/expenses/categorylimits/addcategorylimit',authMiddleware.isAuthenticated, categorylimitsController.addcategorylimit)
+router.post('/expenses/categorylimits/addcategorylimit',authMiddleware.isAuthenticated, categorylimitsController.postcategorylimit)
+
+//edit category & limit
+router.get('/expenses/categorylimits/edit/:id',authMiddleware.isAuthenticated, categorylimitsController.editpage)
+router.put('/expenses/categorylimits/edit/:id',authMiddleware.isAuthenticated, categorylimitsController.posteditpage)
+
+//Delete category & limit
+router.get('/expenses/categorylimits/delete/:id',authMiddleware.isAuthenticated, categorylimitsController.deletepage)
+router.delete('/expenses/categorylimits/delete/:id',authMiddleware.isAuthenticated, categorylimitsController.postdeletepage)
+
+//coureses & credits---------------------------------------------------------------------------------------------
+//showing all courses & credits  
+router.get('/courses',authMiddleware.isAuthenticated, coursesController.coursespage)
+
+//adding course & credit
+router.get('/courses/addcourse',authMiddleware.isAuthenticated, coursesController.addcourse)
+router.post('/courses/addcourse',authMiddleware.isAuthenticated, coursesController.postcourse)
+
+//edit course & credit
+router.get('/courses/edit/:id',authMiddleware.isAuthenticated, coursesController.editpage)
+router.put('/courses/edit/:id',authMiddleware.isAuthenticated, coursesController.posteditpage)
+
+//Delete course & credit
+router.get('/courses/delete/:id',authMiddleware.isAuthenticated, coursesController.deletepage)
+router.delete('/courses/delete/:id',authMiddleware.isAuthenticated, coursesController.postdeletepage)
+
+
+//TimeTable for Courses
+// router.get('/timetable',authMiddleware.isAuthenticated, coursesController.timetable)
+// router.put('/timetable',authMiddleware.isAuthenticated, coursesController.posttimetable)
+
+//display timetable
+// router.get('/showtimetable',authMiddleware.isAuthenticated, coursesController.showtimetable)
+
 
 module.exports=router

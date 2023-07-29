@@ -1,23 +1,53 @@
 const assignmentmodel=require('../models/assignmentmodel')
 const mongoose=require('mongoose')
+const path=require('path')
+const express=require('express')
+const router=express.Router()
+const multer = require('multer');
+const addPathModule = require('../middleware/pathware');
+const fs=require('fs')
+
+ 
+
 
 //viewing all assignments
 module.exports.assignmentspage=async (req, res)=>{
-    const assignmentsdata=await assignmentmodel.find({studentId:req.session.studentId}) 
-    console.log(assignmentsdata)
+    
+    try {
+        const assignmentsdata=await assignmentmodel.find({studentId:req.session.studentId}) 
+    // console.log(assignmentsdata)
     res.render('assignments',{assignmentsdata})
+      } catch (error) {
+        // Handle the error here
+        console.error("Error occurred while fetching assignment data:", error);
+        res.status(500).send("An error occurred while fetching assignment data.");
+      }
 }
 
 //viewing assignment
 module.exports.viewpage=async (req, res)=>{
-    const assignmentdata=await assignmentmodel.findOne({ _id: req.params.id })
+    
+    try {
+        const assignmentdata=await assignmentmodel.findOne({ _id: req.params.id })
     res.render('viewassignment',{assignmentdata})
+      } catch (error) {
+        // Handle the error here
+        console.error("Error occurred while fetching assignment data:", error);
+        res.status(500).send("An error occurred while fetching assignment data.");
+      }
 }
 
 //editing assignments
 module.exports.editpage=async (req, res)=>{
-    const assignmentdata=await assignmentmodel.findOne({ _id: req.params.id })
-    res.render('editassignment',{assignmentdata})
+    
+    try {
+        const assignmentdata=await assignmentmodel.findOne({ _id: req.params.id })
+        res.render('editassignment',{assignmentdata})
+      } catch (error) {
+        // Handle the error here
+        console.error("Error occurred while fetching assignment data:", error);
+        res.status(500).send("An error occurred while fetching assignment data.");
+      }
 }
 
 module.exports.posteditpage=async (req, res)=>{
@@ -32,17 +62,44 @@ module.exports.posteditpage=async (req, res)=>{
 
 //delete assignment
 module.exports.deletepage=async (req, res)=>{
-    const assignmentdata=await assignmentmodel.findOne({ _id: req.params.id })
-    res.render('deleteassignment',{assignmentdata})
+    
+    try {
+        const assignmentdata=await assignmentmodel.findOne({ _id: req.params.id })
+        res.render('deleteassignment',{assignmentdata})
+      } catch (error) {
+        // Handle the error here
+        console.error("Error occurred while fetching assignment data:", error);
+        res.status(500).send("An error occurred while fetching assignment data.");
+      }
 }
+
 module.exports.postdeletepage=async (req, res)=>{
+     
+    
+     try {
+        const assignmentdata=await assignmentmodel.findOne({ _id: req.params.id })
+    const pdfPath=assignmentdata.pdf
+    fs.unlink(pdfPath, (err) => {
+        if (err) {
+            console.error('Error deleting PDF file:', err);
+        } else {
+            console.log('PDF file deleted successfully.');
+        }
+    });
     await assignmentmodel.deleteOne({ _id: req.params.id}) 
      res.redirect('/assignments')
+      } catch (error) {
+        // Handle the error here
+        console.error("Error occurred while fetching assignment data:", error);
+        res.status(500).send("An error occurred while fetching assignment data.");
+      }
 }
 
 //search
 module.exports.searchpage=async (req, res)=>{
-   const searchassignment=req.body.searchassignment
+   
+   try {
+    const searchassignment=req.body.searchassignment
 //    const regexserachassignment=searchassignment.replace(/[^a-zA-Z0-9]/g,"");
 
    const searchassignmentdata=await assignmentmodel.find({
@@ -53,6 +110,11 @@ module.exports.searchpage=async (req, res)=>{
     ]
    }) 
    res.render('searchassignment',{searchassignmentdata})
+  } catch (error) {
+    // Handle the error here
+    console.error("Error occurred while fetching assignment data:", error);
+    res.status(500).send("An error occurred while fetching assignment data.");
+  }
 }
 
 //calendar view of assignments directing

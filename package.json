@@ -25,7 +25,9 @@
     "fullcalendar": "^6.1.8",
     "googleapis": "^122.0.0",
     "method-override": "^3.0.0",
+    "moment": "^2.29.4",
     "mongoose": "^7.4.0",
+    "multer": "^1.4.5-lts.1",
     "nodemon": "^3.0.1"
   }
 }

@@ -14,13 +14,22 @@ require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
  
 //rendering addevent page
 module.exports.addEvent=async (req, res)=>{
-    res.render('addevent')
+    
+    try {
+      res.render('addevent')
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
 }   
 
 
                    //adding event by post + going to googlecalendar
 module.exports.postEvent=async (req, res)=>{
-    console.log(req.body.startdate + "Hehe")
+    
+    try {
+      console.log(req.body.startdate + "Hehe")
   
     const data={
         event:req.body.event,
@@ -97,50 +106,99 @@ module.exports.postEvent=async (req, res)=>{
 
 
     res.redirect('/events') 
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
 }  
 
 //viewing all events
 module.exports.eventspage=async (req, res)=>{
-    const eventsdata=await eventsmodel.find({studentId:req.session.studentId}) 
-    // console.log(eventsdata)
-    res.render('events',{eventsdata})
+    
+    try {
+      const eventsdata=await eventsmodel.find({studentId:req.session.studentId}) 
+      // console.log(eventsdata)
+      res.render('events',{eventsdata})
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
 }
 
 //viewing an event
 module.exports.viewpage=async (req, res)=>{
-    const eventdata=await eventsmodel.findOne({ _id: req.params.id })
+    
+    try {
+      const eventdata=await eventsmodel.findOne({ _id: req.params.id })
     res.render('viewevent',{eventdata})
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
 }
 
 //editing an event
 module.exports.editpage=async (req, res)=>{
-    const eventdata=await eventsmodel.findOne({ _id: req.params.id })
-    res.render('editevent',{eventdata})
+    
+    try {
+      const eventdata=await eventsmodel.findOne({ _id: req.params.id })
+      res.render('editevent',{eventdata})
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
 }
 
 module.exports.posteditpage=async (req, res)=>{
-    const editedevent=await eventsmodel.findByIdAndUpdate(req.params.id,{ 
+    
+     try {
+      const editedevent=await eventsmodel.findByIdAndUpdate(req.params.id,{ 
         event:req.body.event,
         startdate:req.body.startdate,
         enddate:req.body.enddate
      })
      await editedevent.save()
      res.redirect('/events')
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
 }
 
 //deleting an event
 module.exports.deletepage=async (req, res)=>{
-    const eventdata=await eventsmodel.findOne({ _id: req.params.id })
+    
+    try {
+      const eventdata=await eventsmodel.findOne({ _id: req.params.id })
     res.render('deleteevent',{eventdata})
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
 }
 module.exports.postdeletepage=async (req, res)=>{
-    await eventsmodel.deleteOne({ _id: req.params.id}) 
+    
+     try {
+      await eventsmodel.deleteOne({ _id: req.params.id}) 
      res.redirect('/events')
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
 }
 
 //calendar view of events
 module.exports.calendarpage=async (req, res)=>{
-    const eventsdata=await eventsmodel.find({studentId:req.session.studentId})
+    
+    try {
+      const eventsdata=await eventsmodel.find({studentId:req.session.studentId})
     const events=[]
     eventsdata.forEach(element => {
         events.push({
@@ -154,12 +212,19 @@ module.exports.calendarpage=async (req, res)=>{
     //   console.log(events)
     // const data="Inspection"
     res.render('calendarevent',{layout:false,eventsJSON: JSON.stringify(events)})
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
 }
 
 
 //search
 module.exports.searchpage=async (req, res)=>{
-    const searchevent=req.body.searchevent
+    
+    try {
+      const searchevent=req.body.searchevent
  
  
     const searcheventdata=await eventsmodel.find({
@@ -169,12 +234,19 @@ module.exports.searchpage=async (req, res)=>{
      ]
     }) 
     res.render('searchevent',{searcheventdata})
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
  }
 
 
  //commoncalendar
  module.exports.commoncalendarpage=async (req, res)=>{
-    const events=[]
+    
+    try {
+      const events=[]
     
     //fetching assignments and dudedate to events array to put in calendar
     const assignmentsdata=await assignmentmodel.find({studentId:req.session.studentId})
@@ -200,6 +272,11 @@ module.exports.searchpage=async (req, res)=>{
     //   console.log(events)
     // const data="Inspection"
     res.render('commoncalendar',{layout:false,eventsJSON: JSON.stringify(events)})
+    } catch (error) {
+      // Handle the error here
+      console.error("Error occurred while fetching assignment data:", error);
+      res.status(500).send("An error occurred while fetching assignment data.");
+    }
 }
 
 

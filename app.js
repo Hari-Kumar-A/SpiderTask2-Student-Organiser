@@ -50,6 +50,9 @@ app.use(methodOverride('_method'))
 //to add image, css part
 app.use(express.static('public'))
 
+//to facilitate the pdf retrieving
+app.use('/uploads', express.static('uploads'));
+
 app.use(expressLayout)
 
 app.set('layout','./layouts/layout')
@@ -97,7 +100,7 @@ app.get('*',(req, res)=>{
 app.listen(PORT)
 
 
-//SENDING EVENTS TO GOOGLE CALENDAR.....
+//SENDING EVENTS TO GOOGLE CALENDAR..... only for harikumar3868@gmail.com
 
 
 
@@ -126,7 +129,7 @@ const auth = new google.auth.GoogleAuth({
   scopes: SCOPES,
 });
 
-// `${element.startdate}`
+ 
 
 const eventsmodel=require('./server/models/eventsmodel')
 

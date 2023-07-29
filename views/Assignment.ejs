@@ -6,7 +6,7 @@
 
 <div class="link"> <a href="/">Dashboard</a> / <a href="/assignments">Assignments</a> / New Assignment</div>
 
-<form action="assignment" method="post" class="assignmentform">
+<form action="assignment" method="post" class="assignmentform" enctype="multipart/form-data">
     <div class="details">
        <label for="course">Course :</label>
        <input type="text" class="form-details" id="course" name="course" placeholder="Enter The Course Name"
@@ -23,6 +23,11 @@
         <input type="date" class="form-details" id="date" name="duedate" placeholder="Enter The Due Date"
         required>
      </div>
+
+     <div class="details">
+      <label for="file">Upload Document :</label>
+      <input type="file" class="form-details" id="file" name="pdf" accept=".pdf" >
+   </div>
 
      <div class="details">
         <button type="submit" class="submit" id="addsubmit"> Add Assignment</button>
