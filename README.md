@@ -1,4 +1,4 @@
-# SpiderTask2-Student-Organiser
+# SpiderTask2-Student-Organiser(Normal Mode)
 1) Authentication System
 2) Usage of Express Session
 3) MongoDB CRUD Operation
